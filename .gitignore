@@ -1,0 +1,8 @@
+debug.log
+login.conf
+tmp/*
+log/*
+!.gitkeep
+.alsf/
+.saveFileLocation
+.idea/
