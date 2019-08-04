@@ -39,13 +39,6 @@
     ruby 2.5.3p105 (2018-10-18 revision 65156) [x64-mingw32]
     ```
 
--   ChromeDriver
-
-    ```text
-    $ chromedriver --version
-    ChromeDriver 73.0.3683.20 (8e2b610813e167eee3619ac4ce6e42e3ec622017)
-    ```
-
 ## 必要なもの
 
 -   Ruby (and selenium-driver)
@@ -111,10 +104,7 @@
 
 ### 4. Copy Scripts to Startup
 
--   is_morning_then_autologin.shをスタートアップフォルダに配置
-
-    -   このスクリプトの実行時間が06:00～08:59のときのみ，Rubyスクリプトが実行される
-    -   このスクリプトを使わず，autologin_salesforce.rbを手動実行してもよい
+-   is_morning_then_autologin.sh.template を編集してスタートアップフォルダに配置
 
 ## autologin_salesforce.rbの手動実行方法について
 
@@ -135,10 +125,7 @@
 →打刻ボタンを押下→「勤務表」タブを表示(打刻されていることを確認できる)
 →ログアウト→ブラウザを閉じる
 
-    -   ソースコードをいじれば，ヘッドレスモードで実行することも可能です
-
--   退社・定時退社モードで実行すると，「勤務表」に遷移後，3分間スリープしますので，
-その間に工数の入力を行ってください
+>   ソースコードをいじれば，ヘッドレスモードで実行することも可能です
 
 -   ログファイルがlog/execute_logsに出力されています (役に立つかどうかわからない)
 

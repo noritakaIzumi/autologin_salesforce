@@ -6,3 +6,4 @@ log/*
 .alsf/
 .saveFileLocation
 .idea/
+*.sh

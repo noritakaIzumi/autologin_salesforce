@@ -50,7 +50,7 @@ def main
   wait = Selenium::WebDriver::Wait.new(:timeout => 60)
   # ignore chrome popup
   options.prefs['profile.default_content_setting_values.notifications'] = 2
-  options.add_argument('start-maximized');  # fullscreen mode
+  options.add_argument('start-maximized'); # fullscreen mode
   # options.headless! # run on headless mode
   logger.info('set browser config')
 
@@ -62,7 +62,7 @@ def main
   driver.get('https://login.salesforce.com/')
   logger.info('accessed salesforce')
 
-  wait.until{driver.find_element(:class, 'username').displayed?}
+  wait.until { driver.find_element(:class, 'username').displayed? }
   # input userName and password
   driver.find_element(:class, 'username').send_keys login_info['userName']
   logger.debug('input userName')
@@ -73,16 +73,16 @@ def main
   driver.find_element(:id, 'Login').click
   logger.info('signed in')
 
-  wait.until{driver.find_element(:css, 'iframe[force-alohaPage_alohaPage]').displayed?}
+  wait.until { driver.find_element(:css, 'iframe[force-alohaPage_alohaPage]').displayed? }
   # switch frame to clocking
   frame = driver.find_element(:css, 'iframe[force-alohaPage_alohaPage]')
   driver.switch_to.frame(frame)
   logger.debug('focused on the clocking frame')
 
-  wait.until{driver.find_element(:id, 'btnStInput').displayed?}
-  wait.until{driver.find_element(:id, 'btnEtInput').displayed?}
-  wait.until{driver.find_element(:id, 'btnTstInput').displayed?}
-  wait.until{driver.find_element(:id, 'btnTetInput').displayed?}
+  wait.until { driver.find_element(:id, 'btnStInput').displayed? }
+  wait.until { driver.find_element(:id, 'btnEtInput').displayed? }
+  wait.until { driver.find_element(:id, 'btnTstInput').displayed? }
+  wait.until { driver.find_element(:id, 'btnTetInput').displayed? }
   # click button
   case clocking_option
   when 'arrival' then
@@ -94,7 +94,7 @@ def main
   when 'regular_leaving' then
     driver.find_element(:id, 'btnTetInput').click
   else
-    raise # TODO: what?
+    raise
   end
   logger.info('clocked (element: ' << clocking_option << ')')
 
@@ -102,13 +102,6 @@ def main
 
   # see clocked
   driver.get('https://ap3.lightning.force.com/lightning/n/teamspirit__AtkWorkTimeTab')
-
-  if %w[leaving regular_leaving].include?(clocking_option)
-    driver.execute_script("alert('次の画面で工数を入力してください．')")
-    sleep 180
-    driver.quit
-    return
-  end
 
   sleep 8
 
