@@ -74,10 +74,19 @@ def main
   driver.find_element(:id, 'Login').click
   logger.info('signed in')
 
-  wait.until { driver.find_element(:css, 'iframe[force-alohaPage_alohaPage]').displayed? }
+  clocking_area = 'iframe[force-alohaPage_alohaPage]'
   # switch frame to clocking
-  frame = driver.find_element(:css, 'iframe[force-alohaPage_alohaPage]')
-  driver.switch_to.frame(frame)
+  tried = 0
+  begin
+    tried += 1
+    frame = driver.find_element(:css, clocking_area)
+    driver.switch_to.frame(frame)
+  rescue Selenium::WebDriver::Error::NoSuchElementError
+    logger.info('find_element retried: ' + tried.to_s)
+    sleep 1
+    retry if tried < timeout_second
+    raise
+  end
   logger.debug('focused on the clocking frame')
 
   wait.until { driver.find_element(:id, 'btnStInput').displayed? }
