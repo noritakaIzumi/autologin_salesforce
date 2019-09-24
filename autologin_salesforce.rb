@@ -46,8 +46,9 @@ def main
   logger.debug('user name: ' << login_info['userName'])
 
   # browser config
+  timeout_second = 15
   options = Selenium::WebDriver::Chrome::Options.new
-  wait = Selenium::WebDriver::Wait.new(:timeout => 60)
+  wait = Selenium::WebDriver::Wait.new(timeout: timeout_second)
   # ignore chrome popup
   options.prefs['profile.default_content_setting_values.notifications'] = 2
   options.add_argument('start-maximized'); # fullscreen mode
