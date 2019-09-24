@@ -1,10 +1,15 @@
-# ワンタッチでSalesforceの打刻(定時出社)をしてくれるアプリ - v2.2chrome
+# ワンタッチでSalesforceの打刻(定時出社)をしてくれるアプリ - chrome
 
 -   GitHubリポジトリ
 
     [noritakaIzumi/autologin_salesforce: Automatically Login to Salesforce](https://github.com/noritakaIzumi/autologin_salesforce)
 
 ### Update History
+
+-   2019/9/25 (v2.3)
+
+    -   ボタン要素を待つロジックを変更
+    -   タイムアウト秒数を変更
 
 -   2019/3/27 (v2.2.1)
 
