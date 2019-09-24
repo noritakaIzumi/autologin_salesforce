@@ -25,106 +25,101 @@ def read_login_info
   login_info
 end
 
-def main
-  logger = Logger.new('./log/execute_logs')
-  logger.level = Logger::DEBUG
+logger = Logger.new('./log/execute_logs')
+logger.level = Logger::DEBUG
 
-  logger.unknown('main: start')
+logger.unknown('main: start')
 
-  # receiving argument
-  clocking_option = if !ARGV[0].nil?
-                      ARGV[0]
-                    else
-                      'leaving'
-                    end
-  logger.info('received argument')
+# receiving argument
+clocking_option = if !ARGV[0].nil?
+                    ARGV[0]
+                  else
+                    'leaving'
+                  end
+logger.info('received argument')
 
-  # import login info
-  login_info = read_login_info
-  pp login_info['userName']
-  logger.info('imported login information')
-  logger.debug('user name: ' << login_info['userName'])
+# import login info
+login_info = read_login_info
+pp login_info['userName']
+logger.info('imported login information')
+logger.debug('user name: ' << login_info['userName'])
 
-  # browser config
-  timeout_second = 15
-  options = Selenium::WebDriver::Chrome::Options.new
-  wait = Selenium::WebDriver::Wait.new(timeout: timeout_second)
-  # ignore chrome popup
-  options.prefs['profile.default_content_setting_values.notifications'] = 2
-  options.add_argument('start-maximized'); # fullscreen mode
-  # options.headless! # run on headless mode
-  logger.info('set browser config')
+# browser config
+timeout_second = 15
+options = Selenium::WebDriver::Chrome::Options.new
+wait = Selenium::WebDriver::Wait.new(timeout: timeout_second)
+# ignore chrome popup
+options.prefs['profile.default_content_setting_values.notifications'] = 2
+options.add_argument('start-maximized'); # fullscreen mode
+# options.headless! # run on headless mode
+logger.info('set browser config')
 
-  # open browser in chrome
-  driver = Selenium::WebDriver.for(:chrome, options: options)
-  logger.info('opened browser')
+# open browser in chrome
+driver = Selenium::WebDriver.for(:chrome, options: options)
+logger.info('opened browser')
 
-  # access salesforce
-  driver.get('https://login.salesforce.com/')
-  logger.info('accessed salesforce')
+# access salesforce
+driver.get('https://login.salesforce.com/')
+logger.info('accessed salesforce')
 
-  wait.until { driver.find_element(:class, 'username').displayed? }
-  # input userName and password
-  driver.find_element(:class, 'username').send_keys login_info['userName']
-  logger.debug('input userName')
-  driver.find_element(:class, 'password').send_keys login_info['password']
-  logger.debug('input password')
+wait.until { driver.find_element(:class, 'username').displayed? }
+# input userName and password
+driver.find_element(:class, 'username').send_keys login_info['userName']
+logger.debug('input userName')
+driver.find_element(:class, 'password').send_keys login_info['password']
+logger.debug('input password')
 
-  # login
-  driver.find_element(:id, 'Login').click
-  logger.info('signed in')
+# login
+driver.find_element(:id, 'Login').click
+logger.info('signed in')
 
-  clocking_area = 'iframe[force-alohaPage_alohaPage]'
-  # switch frame to clocking
-  tried = 0
-  begin
-    tried += 1
-    frame = driver.find_element(:css, clocking_area)
-    driver.switch_to.frame(frame)
-  rescue Selenium::WebDriver::Error::NoSuchElementError
-    logger.info('find_element retried: ' + tried.to_s)
-    sleep 1
-    retry if tried < timeout_second
-    raise
-  end
-  logger.debug('focused on the clocking frame')
-
-  wait.until { driver.find_element(:id, 'btnStInput').displayed? }
-  wait.until { driver.find_element(:id, 'btnEtInput').displayed? }
-  wait.until { driver.find_element(:id, 'btnTstInput').displayed? }
-  wait.until { driver.find_element(:id, 'btnTetInput').displayed? }
-  # click button
-  case clocking_option
-  when 'arrival' then
-    driver.find_element(:id, 'btnStInput').click
-  when 'leaving' then
-    driver.find_element(:id, 'btnEtInput').click
-  when 'regular_arrival' then
-    driver.find_element(:id, 'btnTstInput').click
-  when 'regular_leaving' then
-    driver.find_element(:id, 'btnTetInput').click
-  else
-    raise
-  end
-  logger.info('clocked (element: ' << clocking_option << ')')
-
+clocking_area = 'iframe[force-alohaPage_alohaPage]'
+# switch frame to clocking
+tried = 0
+begin
+  tried += 1
+  frame = driver.find_element(:css, clocking_area)
+  driver.switch_to.frame(frame)
+rescue Selenium::WebDriver::Error::NoSuchElementError
+  logger.info('find_element retried: ' + tried.to_s)
   sleep 1
-
-  # see clocked
-  driver.get('https://ap3.lightning.force.com/lightning/n/teamspirit__AtkWorkTimeTab')
-
-  sleep 8
-
-  # logout
-  driver.get('https://ap3.lightning.force.com/secur/logout.jsp')
-  logger.info('signed out')
-
-  # close browser
-  driver.quit
-  logger.info('closed browser')
-
-  logger.unknown('main: end')
+  retry if tried < timeout_second
+  raise
 end
+logger.debug('focused on the clocking frame')
 
-# execute main
-main if $PROGRAM_NAME == __FILE__
+wait.until { driver.find_element(:id, 'btnStInput').displayed? }
+wait.until { driver.find_element(:id, 'btnEtInput').displayed? }
+wait.until { driver.find_element(:id, 'btnTstInput').displayed? }
+wait.until { driver.find_element(:id, 'btnTetInput').displayed? }
+# click button
+case clocking_option
+when 'arrival' then
+  driver.find_element(:id, 'btnStInput').click
+when 'leaving' then
+  driver.find_element(:id, 'btnEtInput').click
+when 'regular_arrival' then
+  driver.find_element(:id, 'btnTstInput').click
+when 'regular_leaving' then
+  driver.find_element(:id, 'btnTetInput').click
+else
+  raise
+end
+logger.info('clocked (element: ' << clocking_option << ')')
+
+sleep 1
+
+# see clocked
+driver.get('https://ap3.lightning.force.com/lightning/n/teamspirit__AtkWorkTimeTab')
+
+sleep 8
+
+# logout
+driver.get('https://ap3.lightning.force.com/secur/logout.jsp')
+logger.info('signed out')
+
+# close browser
+driver.quit
+logger.info('closed browser')
+
+logger.unknown('main: end')
