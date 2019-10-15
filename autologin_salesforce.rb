@@ -73,12 +73,12 @@ logger.debug('input password')
 driver.find_element(:id, 'Login').click
 logger.info('signed in')
 
-clocking_area = 'iframe[force-alohaPage_alohaPage]'
+xpath = '//*[@id="brandBand_1"]/div/div[1]/div/div/div/div/div[1]/div[1]/div[4]/article/div[2]/div/force-aloha-page/div/iframe'
 # switch frame to clocking
 tried = 0
 begin
   tried += 1
-  frame = driver.find_element(:css, clocking_area)
+  frame = driver.find_element(:xpath, xpath)
   driver.switch_to.frame(frame)
 rescue Selenium::WebDriver::Error::NoSuchElementError
   logger.info('find_element retried: ' + tried.to_s)
